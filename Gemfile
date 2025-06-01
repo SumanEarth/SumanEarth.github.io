@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
-gem 'jekyll'
-
-gem 'al-folio'
+gem 'jekyll', '~> 4.3.3'
+gem 'al-folio', '~> 0.16.0'
+gem 'webrick', '~> 1.8'  # Required for Jekyll 4+
 
 # Core plugins that directly affect site building
 group :jekyll_plugins do
