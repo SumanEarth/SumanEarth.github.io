@@ -1,0 +1,4 @@
+# Create .nojekyll file in repository root
+echo "" > .nojekyll
+git add .nojekyll
+git commit -m "Add .nojekyll to disable default build"
