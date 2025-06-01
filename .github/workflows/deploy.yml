@@ -3,11 +3,16 @@ name: Build and Deploy
 on:
   push:
     branches: [main]
-  workflow_dispatch:  
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+      pages: write
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -18,16 +23,27 @@ jobs:
           ruby-version: '3.2'
           bundler-cache: true
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Install dependencies
         run: bundle install
 
       - name: Build site
         run: bundle exec jekyll build
 
+      - name: Verify build output
+        run: |
+          ls -la _site
+          test -f _site/index.html
+
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
         with:
-          apiToken: ${{ secrets.PLdlgjfPCXh5s_nfeFo8nt6bTGAyvyHduqMo8pfu }}
-          accountId: ${{ secrets.dd68872c13dbd5a105c7b18d60db8073 }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: sumanearth-github-io
           directory: _site
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
