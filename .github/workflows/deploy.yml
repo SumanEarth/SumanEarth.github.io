@@ -29,17 +29,19 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: bundle install
+        run: |
+          bundle config path vendor/bundle
+          bundle install
 
       - name: Build site
         run: bundle exec jekyll build
 
-      - name: Verify build output
+      - name: Verify build
         run: |
           ls -la _site
-          test -f _site/index.html
+          test -f _site/index.html || exit 1
 
-      - name: Deploy to Cloudflare Pages
+      - name: Deploy to Cloudflare
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
